@@ -2,14 +2,14 @@
 
 #include "ll/api/mod/NativeMod.h"
 
-namespace my_mod {
+namespace youzaiworld {
 
-class MyMod {
+class youzaiworld {
 
 public:
-    static MyMod& getInstance();
+    static youzaiworld& getInstance();
 
-    MyMod() : mSelf(*ll::mod::NativeMod::current()) {}
+    youzaiworld() : mSelf(*ll::mod::NativeMod::current()) {}
 
     [[nodiscard]] ll::mod::NativeMod& getSelf() const { return mSelf; }
 
@@ -30,4 +30,4 @@ private:
     ll::mod::NativeMod& mSelf;
 };
 
-} // namespace my_mod
+} 
