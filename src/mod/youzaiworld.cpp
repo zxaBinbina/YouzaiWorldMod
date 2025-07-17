@@ -50,7 +50,16 @@ namespace youzaiworld {
                         return;
                     }
                     
-                    // 代码其他功能实现
+                    // 代码功能实现
+                    if (normalizedTag == "nocjqscinf") {
+                        // 处理 nocjqscinf 标签逻辑
+                        
+                    } else if (normalizedTag == "nocjjginf") {
+                        // 处理 nocjjginf 标签逻辑
+                        
+                    } else {
+                        output.error("§e悠哉世界§7 >>>> §4语法错误! ");
+                    }
 
                     // 测试命令可用性输出
                     output.success("§e悠哉世界§7 >>>> §2命令执行成功! \n §w类型: {}, 值: {}", normalizedTag, param.value);
