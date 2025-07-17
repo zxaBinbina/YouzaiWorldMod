@@ -1,7 +1,6 @@
 #include "mod/youzaiworld.h"
 
 #include "ll/api/mod/RegisterHelper.h"
-
 #include <ll/api/Config.h>
 #include <ll/api/command/CommandHandle.h>
 #include <ll/api/command/CommandRegistrar.h>
@@ -13,79 +12,75 @@
 #include <mc/server/commands/CommandOrigin.h>
 #include <mc/server/commands/CommandOutput.h>
 #include <mc/world/actor/player/Player.h>
+
 namespace youzaiworld {
 
-youzaiworld& youzaiworld::getInstance() {
-    static youzaiworld instance;
-    return instance;
-}
+    struct YouzaiworldTagCommand {
+        std::string tagType; // 字符串形式接收参数
+        bool value;          // 布尔值参数
+    };
 
-bool youzaiworld::load() {
-    getSelf().getLogger().debug("YouzaiWorldMod 加载中...");
-    // Code for loading the mod goes here.
-    return true;
-}
+    void registerYouzaiworldCommand() {
+        using namespace ll::command;
+        auto& command = CommandRegistrar::getInstance().getOrCreateCommand(
+            "youzaiworld", 
+            "Manage Youzaiworld tags"
+        );
+    
+        // 注册子命令"tag"
+        command.overload<YouzaiworldTagCommand>()
+            .text("tag")
+            .required("tagType")  // 接收字符串参数
+            .required("value")    // 接收布尔值参数
+            .execute(
+                [](CommandOrigin const& origin, CommandOutput& output, YouzaiworldTagCommand const& param) {
+                    // 检查玩家权限（可选）
+                    if (origin.getOriginType() != CommandOriginType::Player) {
+                        output.error("该命令只能由玩家执行");
+                        return;
+                    }
+                    
+                    // 手动转换字符串参数
+                    std::string normalizedTag = param.tagType;
+                    std::transform(normalizedTag.begin(), normalizedTag.end(), normalizedTag.begin(), ::tolower);
+                    
+                    // 验证参数有效性
+                    if (normalizedTag != "nocjqscinf" && normalizedTag != "nocjjginf") {
+                        output.error("无效的标签类型！请使用 nocjqscinf 或 nocjjginf");
+                        return;
+                    }
+                    
+                    // 这里可以添加您的业务逻辑
+                    // 例如：更新玩家标签状态
+                    
+                    output.success("标签已更新！类型: {}, 值: {}", normalizedTag, param.value);
+                }
+            );
+    }
 
-bool youzaiworld::enable() {
-    getSelf().getLogger().debug("YouzaiWorldMod 启用中...");
-    auto& registrar = ll::command::CommandRegistrar::getInstance();
-    auto& cmd = registrar.getOrCreateCommand(
-        "youzaiworld", 
-        "YouZaiWorld command system", 
-        CommandPermissionLevel::Any
-    );
+    youzaiworld& youzaiworld::getInstance() {
+        static youzaiworld instance;
+        return instance;
+    }
 
-    cmd.overload<CommandRawText, CommandRawText, bool>(getSelf())
-        .required("tag")       // 一级子命令
-        .required("subcommand") // 二级子命令
-        .required("value")     // bool 参数
-        .execute([](CommandOrigin const& origin, CommandOutput& output, 
-                  CommandRawText const& tag, 
-                  CommandRawText const& subCmd, 
-                  bool value) {
-            
-            // 使用 mText 成员获取字符串
-            std::string tagStr = tag.mText;
-            std::string subCmdStr = subCmd.mText;
-            
-            // 验证一级子命令
-            if (tagStr != "tag") {
-                output.error("First subcommand must be 'tag'");
-                return;
-            }
-            
-            // 验证二级子命令
-            if (subCmdStr != "nosxinf" && subCmdStr != "nocjinf") {
-                output.error("Invalid subcommand. Use 'nosxinf' or 'nocjinf'");
-                return;
-            }
-            
-            // 检查执行者是否为玩家
-            auto* entity = origin.getEntity();
-            if (!entity || !entity->isType(ActorType::Player)) {
-                output.error("Only players can use this command");
-                return;
-            }
-            
-            auto* player = static_cast<Player*>(entity);
-            
-            // 发送成功消息
-            output.success(fmt::format(
-                "{} set {} to {}",
-                player->getRealName(),
-                subCmdStr,
-                value ? "true" : "false"
-            ));
-        });
-    return true;
-}
+    bool youzaiworld::load() const {
+        getSelf().getLogger().debug("YouzaiWorldMod 加载中...");
+        // 加载逻辑
+        return true;
+    }
 
-bool youzaiworld::disable() {
-    getSelf().getLogger().debug("YouzaiWorldMod 禁用中...");
-    // Code for disabling the mod goes here.
-    return true;
-}
+    bool youzaiworld::enable() const {
+        getSelf().getLogger().debug("YouzaiWorldMod 启用中...");
+        registerYouzaiworldCommand();
+        return true;
+    }
 
-} 
+    bool youzaiworld::disable() const {
+        getSelf().getLogger().debug("YouzaiWorldMod 禁用中...");
+        // 禁用逻辑
+        return true;
+    }
+
+} // namespace youzaiworld
 
 LL_REGISTER_MOD(youzaiworld::youzaiworld, youzaiworld::youzaiworld::getInstance());
