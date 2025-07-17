@@ -24,7 +24,7 @@ namespace youzaiworld {
         using namespace ll::command;
         auto& command = CommandRegistrar::getInstance().getOrCreateCommand(
             "youzaiworld", 
-            "Manage Youzaiworld tags"
+            "§4 (危险命令) §e悠哉世界服务器管理§r"
         );
     
         // 注册子命令"tag"
@@ -45,15 +45,15 @@ namespace youzaiworld {
                     std::transform(normalizedTag.begin(), normalizedTag.end(), normalizedTag.begin(), ::tolower);
                     
                     // 验证参数有效性
-                    if (normalizedTag != "nocjqscinf" && normalizedTag != "nocjjginf") {
+                    if (normalizedTag != "nocjqscinf" && normalizedTag != "nocjjginf") {  // 在这里添加更多标签类型
                         output.error("无效的标签类型！请使用 nocjqscinf 或 nocjjginf");
                         return;
                     }
                     
-                    // 这里可以添加您的业务逻辑
-                    // 例如：更新玩家标签状态
-                    
-                    output.success("标签已更新！类型: {}, 值: {}", normalizedTag, param.value);
+                    // 代码其他功能实现
+
+                    // 测试命令可用性输出
+                    output.success("§e悠哉世界§7 >>>> §2命令执行成功! \n §w类型: {}, 值: {}", normalizedTag, param.value);
                 }
             );
     }
