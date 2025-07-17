@@ -63,19 +63,19 @@ namespace youzaiworld {
         return instance;
     }
 
-    bool youzaiworld::load() const {
+    bool youzaiworld::load()  {
         getSelf().getLogger().debug("YouzaiWorldMod 加载中...");
         // 加载逻辑
         return true;
     }
 
-    bool youzaiworld::enable() const {
+    bool youzaiworld::enable()  {
         getSelf().getLogger().debug("YouzaiWorldMod 启用中...");
         registerYouzaiworldCommand();
         return true;
     }
 
-    bool youzaiworld::disable() const {
+    bool youzaiworld::disable()  {
         getSelf().getLogger().debug("YouzaiWorldMod 禁用中...");
         // 禁用逻辑
         return true;
