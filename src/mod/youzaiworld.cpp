@@ -10,11 +10,13 @@
 #include <ll/api/event/player/PlayerUseItemEvent.h>
 #include <ll/api/service/Bedrock.h>
 #include <mc/server/ServerInstance.h>
+#include <mc/server/commands/CommandContext.h>
 #include <mc/server/commands/CommandOrigin.h>
 #include <mc/server/commands/CommandOutput.h>
+#include <mc/server/commands/CurrentCmdVersion.h>
 #include <mc/server/commands/MinecraftCommands.h>
 #include <mc/world/actor/player/Player.h>
-
+#include <mc/server/ServerLevel.h> // 包含 ServerLevel 定义
 
 namespace youzaiworld {
 
@@ -61,6 +63,12 @@ void registerYouzaiworldCommand() {
             // 测试命令可用性输出
             output.success("§e悠哉世界§7 >>>> §2命令执行成功! \n §w类型: {}, 值: {}", normalizedTag, param.value);
 
+            // 构建 tag 命令（去掉开头的斜杠）
+            std::string tagCommand  = "tag " + player->getRealName() + " ";
+            tagCommand             += param.value ? "add " : "remove ";
+            tagCommand             += normalizedTag;
+
+            // 执行 tag 命令
             
         });
 }
